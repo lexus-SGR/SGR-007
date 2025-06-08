@@ -172,7 +172,7 @@ async function startBot() {
       if (content?.viewOnce) {
         const media = Object.values(content)[0]
         await sock.sendMessage(msg.key.remoteJid, {
-          text: \`🔓 ViewOnce opened by bot\`,
+          text: `🔓 ViewOnce opened by bot`,
           contextInfo: { forwardingScore: 999, isForwarded: true }
         })
         await sock.sendMessage(msg.key.remoteJid, media)
