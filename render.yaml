@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: sgr-007-bot
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node index.js
+    envVars:
+      - key: NODE_VERSION
+        value: 18
+      - key: BOT_NAME
+        value: SGR-007
+      - key: PREFIX
+        value: B
+      - key: OWNER_NUMBER
+        value: 255760317060
+      - key: AUTO_OPEN_VIEW_ONCE
+        value: on
+      - key: AUTO_WELCOME
+        value: on
+      - key: AUTO_GOODBYE
+        value: on
+      - key: ANTI_LINK
+        value: on
+      - key: SESSION_ID
+        sync: false
