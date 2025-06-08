@@ -121,6 +121,7 @@ app.get('/', (req, res) => {
 
 async function loadCommands() {
   const commands = {}
+  if (!fs.existsSync(COMMANDS_DIR)) return commands
   const files = fs.readdirSync(COMMANDS_DIR).filter(f => f.endsWith('.js'))
   for (const file of files) {
     const cmd = require(path.join(COMMANDS_DIR, file))
@@ -134,7 +135,7 @@ async function loadCommands() {
 
 async function startBot() {
   const { version } = await fetchLatestBaileysVersion()
-  console.log(`Using Baileys v${version.join('.')}`)
+  console.log(`📦 Using Baileys v${version.join('.')}`)
 
   if (!fs.existsSync(sessionPath)) fs.mkdirSync(sessionPath, { recursive: true })
   const { state, saveCreds } = await useMultiFileAuthState(sessionPath)
@@ -150,12 +151,11 @@ async function startBot() {
 
   if (!state.creds.registered) {
     pairingCode = await sock.requestPairingCode(OWNER_PHONE)
-    console.log(`📲 Pairing code: ${pairingCode}`)
+    console.log(`🔑 Pairing code: ${pairingCode}`)
   }
 
   const commands = await loadCommands()
 
-  // Auto View Status
   sock.ev.on('messages.update', async updates => {
     for (let update of updates) {
       if (update.messageStubType === 0 && update.key?.remoteJid?.includes('status@broadcast')) {
@@ -164,11 +164,14 @@ async function startBot() {
     }
   })
 
-  // Auto Open View Once
   sock.ev.on('messages.upsert', async ({ messages }) => {
     for (let msg of messages) {
       if (!msg.message || msg.key.fromMe) continue
+
       const content = Object.values(msg.message)[0]
+      const text = msg.message?.conversation || msg.message?.extendedTextMessage?.text || ''
+
+      // Open ViewOnce
       if (content?.viewOnce) {
         const media = Object.values(content)[0]
         await sock.sendMessage(msg.key.remoteJid, {
@@ -179,12 +182,10 @@ async function startBot() {
       }
 
       // Antilink
-      const text = msg.message.conversation || msg.message.extendedTextMessage?.text || ''
-      if (text.match(/chat\\.whatsapp\\.com\\/[A-Za-z0-9]{20,24/)) {
-        if (!msg.key.fromMe) {
-          await sock.sendMessage(msg.key.remoteJid, { text: '🚫 No Group Links Allowed!' })
-          await sock.groupParticipantsUpdate(msg.key.remoteJid, [msg.key.participant], 'remove')
-        }
+      const isGroupLink = /chat\.whatsapp\.com\/[A-Za-z0-9]{20,24}/.test(text)
+      if (isGroupLink && !msg.key.fromMe) {
+        await sock.sendMessage(msg.key.remoteJid, { text: '🚫 No Group Links Allowed!' })
+        await sock.groupParticipantsUpdate(msg.key.remoteJid, [msg.key.participant], 'remove')
       }
 
       // Command Handler
@@ -195,35 +196,34 @@ async function startBot() {
           try {
             await commands[name].execute(sock, msg, args)
           } catch (err) {
-            console.error(\`❌ Error in \${name}:\`, err)
+            console.error(`❌ Error in ${name}:`, err)
           }
         }
       }
     }
   })
 
-  // Welcome + Goodbye
+  // Welcome / Goodbye
   sock.ev.on('group-participants.update', async ({ id, participants, action }) => {
     for (let user of participants) {
       if (action === 'add') {
         await sock.sendMessage(id, {
-          text: \`👋 Karibu @\${user.split('@')[0]}!\n📜 Rules:\n1. Usitume link\n2. Heshimu kila mtu\`,
+          text: `👋 Karibu @${user.split('@')[0]}!\n📜 Rules:\n1. Usitume link\n2. Heshimu kila mtu`,
           mentions: [user]
         })
-      }
-      if (action === 'remove') {
+      } else if (action === 'remove') {
         await sock.sendMessage(id, {
-          text: \`👋 Kwa heri @\${user.split('@')[0]}\`,
+          text: `👋 Kwa heri @${user.split('@')[0]}`,
           mentions: [user]
         })
       }
     }
   })
 
-  console.log('✅ Bot is running...')
+  console.log('✅ WhatsApp bot is running...')
 }
 
 app.listen(PORT, () => {
-  console.log(\`🌐 Web Server running on http://localhost:\${PORT}\`)
+  console.log(`🌐 Web server running at http://localhost:${PORT}`)
   startBot().catch(console.error)
 })
