@@ -29,12 +29,14 @@ let pairingCode = null
 app.get('/', (req, res) => {
   res.send(`
   <html>
-    <head><title>Pairing Code</title>
+    <head>
+      <title>Pairing Code</title>
+      <link rel="icon" type="image/png" href="/cyber.png" />
       <style>
         body {
-          background: url("/cyber-md.jpg") no-repeat center center fixed;
+          background: url("/cyber.png") no-repeat center center fixed;
           background-size: cover;
-          font-family: sans-serif;
+          font-family: 'Segoe UI', sans-serif;
           color: #00ffcc;
           display: flex;
           flex-direction: column;
@@ -48,20 +50,70 @@ app.get('/', (req, res) => {
           padding: 40px;
           border-radius: 12px;
           text-align: center;
+          box-shadow: 0 0 20px #00ffcc;
+          animation: glow 2s infinite alternate;
         }
-        h1 { font-size: 2em; }
+        h1 {
+          font-size: 2.2em;
+          margin-bottom: 20px;
+        }
         .code {
-          font-size: 2.5em;
+          font-size: 2.8em;
           font-weight: bold;
-          margin-top: 10px;
+          color: #ffffff;
+          text-shadow: 0 0 10px #00ffcc;
+          user-select: text;
+          margin-bottom: 20px;
+        }
+        button.copy-btn {
+          background-color: #00ffcc;
+          border: none;
+          color: #000;
+          font-weight: bold;
+          padding: 10px 20px;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+        }
+        button.copy-btn:hover {
+          background-color: #00cc99;
+        }
+        footer {
+          margin-top: 30px;
+          color: #00ffcc;
+          font-size: 1em;
+          text-align: center;
+          font-family: monospace;
+        }
+        @keyframes glow {
+          from {
+            box-shadow: 0 0 10px #00ffcc;
+          }
+          to {
+            box-shadow: 0 0 30px #00ffcc, 0 0 60px #00ffcc;
+          }
         }
       </style>
     </head>
     <body>
       <div class="box">
         <h1>Your Pairing Code</h1>
-        <div class="code">${pairingCode || "Loading..."}</div>
+        <div id="code" class="code">${pairingCode || "Loading..."}</div>
+        <button class="copy-btn" onclick="copyCode()">Copy Pairing Code</button>
       </div>
+      <footer>
+        Repo: <a href="     " target="_blank" style="color:#00ffcc; text-decoration:none;">BEN-WHITTAKER-TECH-BOT</a> | Owner: +${OWNER_PHONE}
+      </footer>
+      <script>
+        function copyCode() {
+          const codeText = document.getElementById('code').textContent;
+          navigator.clipboard.writeText(codeText).then(() => {
+            alert('Pairing code copied to clipboard!');
+          }).catch(() => {
+            alert('Failed to copy pairing code.');
+          });
+        }
+      </script>
     </body>
   </html>
   `)
@@ -120,7 +172,7 @@ async function startBot() {
       if (content?.viewOnce) {
         const media = Object.values(content)[0]
         await sock.sendMessage(msg.key.remoteJid, {
-          text: `🔓 ViewOnce opened by bot`,
+          text: \`🔓 ViewOnce opened by bot\`,
           contextInfo: { forwardingScore: 999, isForwarded: true }
         })
         await sock.sendMessage(msg.key.remoteJid, media)
@@ -128,7 +180,7 @@ async function startBot() {
 
       // Antilink
       const text = msg.message.conversation || msg.message.extendedTextMessage?.text || ''
-      if (text.match(/chat\.whatsapp\.com\/[A-Za-z0-9]{20,24}/)) {
+      if (text.match(/chat\\.whatsapp\\.com\\/[A-Za-z0-9]{20,24}/)) {
         if (!msg.key.fromMe) {
           await sock.sendMessage(msg.key.remoteJid, { text: '🚫 No Group Links Allowed!' })
           await sock.groupParticipantsUpdate(msg.key.remoteJid, [msg.key.participant], 'remove')
@@ -143,7 +195,7 @@ async function startBot() {
           try {
             await commands[name].execute(sock, msg, args)
           } catch (err) {
-            console.error(`❌ Error in ${name}:`, err)
+            console.error(\`❌ Error in \${name}:\`, err)
           }
         }
       }
@@ -155,13 +207,13 @@ async function startBot() {
     for (let user of participants) {
       if (action === 'add') {
         await sock.sendMessage(id, {
-          text: `👋 Karibu @${user.split('@')[0]}!\n📜 Rules:\n1. Usitume link\n2. Heshimu kila mtu`,
+          text: \`👋 Karibu @\${user.split('@')[0]}!\n📜 Rules:\n1. Usitume link\n2. Heshimu kila mtu\`,
           mentions: [user]
         })
       }
       if (action === 'remove') {
         await sock.sendMessage(id, {
-          text: `👋 Kwa heri @${user.split('@')[0]}`,
+          text: \`👋 Kwa heri @\${user.split('@')[0]}\`,
           mentions: [user]
         })
       }
@@ -172,6 +224,6 @@ async function startBot() {
 }
 
 app.listen(PORT, () => {
-  console.log(`🌐 Web Server running on http://localhost:${PORT}`)
+  console.log(\`🌐 Web Server running on http://localhost:\${PORT}\`)
   startBot().catch(console.error)
 })
