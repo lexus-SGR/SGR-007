@@ -180,7 +180,7 @@ async function startBot() {
 
       // Antilink
       const text = msg.message.conversation || msg.message.extendedTextMessage?.text || ''
-      if (text.match(/chat\\.whatsapp\\.com\\/[A-Za-z0-9]{20,24}/)) {
+      if (text.match(/chat\\.whatsapp\\.com\\/[A-Za-z0-9]{20,24/)) {
         if (!msg.key.fromMe) {
           await sock.sendMessage(msg.key.remoteJid, { text: '🚫 No Group Links Allowed!' })
           await sock.groupParticipantsUpdate(msg.key.remoteJid, [msg.key.participant], 'remove')
