@@ -102,7 +102,7 @@ app.get('/', (req, res) => {
         <button class="copy-btn" onclick="copyCode()">Copy Pairing Code</button>
       </div>
       <footer>
-        Repo: <a href="     " target="_blank" style="color:#00ffcc; text-decoration:none;">BEN-WHITTAKER-TECH-BOT</a> | Owner: +${OWNER_PHONE}
+        Repo: <a href="https://github.com/lexus-SGR/SGR-007.git" target="_blank" style="color:#00ffcc; text-decoration:none;">BEN-WHITTAKER-TECH-BOT</a> | Owner: +${OWNER_PHONE}
       </footer>
       <script>
         function copyCode() {
