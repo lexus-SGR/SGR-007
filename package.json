@@ -1,0 +1,43 @@
+{
+  "name": "SGR-007",
+  "version": "1.0.0",
+  "description": "SGR-007 WhatsApp Bot powered by Baileys and Node.js",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "author": "Ben Whittaker Tech",
+  "license": "MIT",
+  "dependencies": {
+    "@whiskeysockets/baileys": "^6.7.16",
+    "axios": "^1.6.8",
+    "chalk": "^5.3.0",
+    "cheerio": "^1.0.0-rc.12",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "figlet": "^1.7.0",
+    "form-data": "^4.0.0",
+    "fs-extra": "^11.2.0",
+    "got": "^12.6.0",
+    "jimp": "^0.22.12",
+    "mathjs": "^12.4.2",
+    "moment": "^2.30.1",
+    "multer": "^1.4.5-lts.1",
+    "node-fetch": "^2.6.9",
+    "nodemon": "^3.1.0",
+    "ora": "^6.3.1",
+    "pdf-lib": "^1.17.1",
+    "pino": "^8.17.0",
+    "qrcode": "^1.5.3",
+    "quick.db": "^9.0.0",
+    "request": "^2.88.2",
+    "spinnies": "^0.5.1",
+    "string-similarity": "^4.0.4",
+    "terminal-image": "^3.1.0",
+    "uuid": "^9.0.1",
+    "validator": "^13.11.0",
+    "websocket": "^1.0.34",
+    "yargs": "^17.7.2"
+  }
+}
