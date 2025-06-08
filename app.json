@@ -1,0 +1,97 @@
+{
+  "name": "SGR-007",
+  "description": "🚀 SGR-007 is a powerful multi-feature WhatsApp bot built with Baileys, FastAPI, and Node.js — supports session linking, anti-link, auto view-once, group welcome, and more!",
+  "repository": "https://github.com/lexus-SGR/SGR-007",
+  "logo": "https://raw.githubusercontent.com/lexus-SGR/SGR-007/main/public/cyber-md.jpg",
+  "keywords": [
+    "whatsapp",
+    "baileys",
+    "bot",
+    "whatsapp-bot",
+    "nodejs",
+    "fastapi",
+    "render",
+    "heroku"
+  ],
+  "website": "https://sgr007-bot.com",
+  "success_url": "/",
+  "stack": "container",
+  "env": {
+    "BOT_NAME": {
+      "description": "Bot display name",
+      "value": "SGR-007"
+    },
+    "OWNER_PHONE": {
+      "description": "Bot owner phone number (international format)",
+      "value": "255760317060"
+    },
+    "PREFIX": {
+      "description": "Command prefix for users",
+      "value": "B"
+    },
+    "PORT": {
+      "description": "Port for Express or FastAPI server",
+      "value": "3000"
+    },
+    "AUTO_VIEW_STATUS": {
+      "description": "Auto view WhatsApp statuses (on/off)",
+      "value": "on"
+    },
+    "AUTO_OPEN_VIEWONCE": {
+      "description": "Auto open view-once media (on/off)",
+      "value": "on"
+    },
+    "AUTO_TYPING": {
+      "description": "Enable auto typing simulation (on/off)",
+      "value": "on"
+    },
+    "ANTILINK": {
+      "description": "Enable group anti-link system (on/off)",
+      "value": "on"
+    },
+    "WELCOME_MSG": {
+      "description": "Send welcome message in new user joins (on/off)",
+      "value": "on"
+    },
+    "GOODBYE_MSG": {
+      "description": "Send goodbye message when someone leaves (on/off)",
+      "value": "on"
+    },
+    "RULES_ENABLED": {
+      "description": "Display rules for group users (on/off)",
+      "value": "on"
+    },
+    "RENDER_MODE": {
+      "description": "If running on Render or similar (on/off)",
+      "value": "on"
+    },
+    "SESSION_FOLDER": {
+      "description": "Folder to save WhatsApp auth session",
+      "value": "./sessions"
+    },
+    "LANGUAGE": {
+      "description": "Language of bot responses (en/sw)",
+      "value": "en"
+    },
+    "WEB_BASE_URL": {
+      "description": "Website base URL to link WhatsApp session codes",
+      "value": "https://sgr007-bot.com"
+    },
+    "DATABASE_URL": {
+      "description": "Optional DB for storing users & sessions",
+      "required": false
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "free"
+    }
+  },
+  "addons": [],
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}
