@@ -26,6 +26,7 @@ app.use(express.static(PUBLIC_DIR))
 
 let pairingCode = null
 
+// ----------------- HOME PAGE ------------------
 app.get('/', (req, res) => {
   res.send(`
   <html>
@@ -98,7 +99,7 @@ app.get('/', (req, res) => {
     <body>
       <div class="box">
         <h1>Your Pairing Code</h1>
-        <div id="code" class="code">${pairingCode || "Loading..."}</div>
+        <div id="code" class="code">Loading...</div>
         <button class="copy-btn" onclick="copyCode()">Copy Pairing Code</button>
       </div>
       <footer>
@@ -113,12 +114,31 @@ app.get('/', (req, res) => {
             alert('Failed to copy pairing code.');
           });
         }
+
+        async function fetchCode() {
+          try {
+            const res = await fetch('/pairing-code');
+            const data = await res.json();
+            document.getElementById('code').textContent = data.code || "Loading..."
+          } catch {
+            document.getElementById('code').textContent = "Error fetching code";
+          }
+        }
+
+        setInterval(fetchCode, 3000);
+        fetchCode();
       </script>
     </body>
   </html>
   `)
 })
 
+// Endpoint ya kupata pairing code dynamically
+app.get('/pairing-code', (req, res) => {
+  res.json({ code: pairingCode || null })
+})
+
+// ------------------ BOT LOGIC ------------------
 async function loadCommands() {
   const commands = {}
   if (!fs.existsSync(COMMANDS_DIR)) return commands
@@ -223,6 +243,7 @@ async function startBot() {
   console.log('✅ WhatsApp bot is running...')
 }
 
+// Start Express Server + Bot
 app.listen(PORT, () => {
   console.log(`🌐 Web server running at http://localhost:${PORT}`)
   startBot().catch(console.error)
